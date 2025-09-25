@@ -13,27 +13,49 @@ import domain.HoatDong;
 import service.HoatDongService;
 
 @WebServlet("/hoatDong")
-public class HoatDongController extends HttpServlet{
+public class HoatDongController extends HttpServlet {
 	HoatDongService hoatDongService = new HoatDongService();
-	 @Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 request.getRequestDispatcher("/WEB-INF/views/TaoHoatDong.jsp").forward(request, response);
-	 }
-    @Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	
-//    	String name=request.getParameter("hoten");
-//    	String email=request.getParameter("email");
-//    	String gioTinh=request.getParameter("gioitinh");
-//    	LocalDateTime ngaySinh=LocalDateTime.parse(request.getParameter("ngaySinh"));
-//    	HoatDong hd = new HoatDong();
-//    	hd.setTenHd(gioTinh);
-//    	if(name!=null && email!=null && gioTinh!=null && ngaySinh!=null) {
-//    		int a=1;
-//    	}
-    	
-    	hoatDongService.createHoatDong();
-    	
-    	request.getRequestDispatcher("/WEB-INF/views/HoatDong.jsp").forward(request, response);
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/WEB-INF/views/TaoHoatDong.jsp").forward(request, response);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String tenHd = request.getParameter("nameAcv");
+		String moTaHd = request.getParameter("descAcv");
+		String ngayBatDauStr = request.getParameter("startDate");
+		String ngayKetThucStr = request.getParameter("endDate");
+		String soLuongMax = request.getParameter("maxQuantity");
+		String soLuongMin = request.getParameter("minQuantity");
+		String thoiHanDkStr = request.getParameter("expiredRegis");
+		String status = request.getParameter("statusAcv");
+//		String idMember=request.getParameter("idMember");
+
+		HoatDongService hoatDongService = new HoatDongService();
+		if (tenHd != null && moTaHd != null && ngayBatDauStr != null && ngayKetThucStr != null && soLuongMax != null
+				&& soLuongMin != null && status != null && thoiHanDkStr != null) {
+			System.err.println(1);
+			LocalDateTime nbd=LocalDateTime.parse(ngayBatDauStr);
+			LocalDateTime nkt=LocalDateTime.parse(ngayKetThucStr);
+			LocalDateTime thdk=LocalDateTime.parse(thoiHanDkStr);
+			
+			Integer slmin= Integer.parseInt(soLuongMin);
+			Integer slmax= Integer.parseInt(soLuongMax);
+//			Integer idmb=Integer.parseInt(idMember);
+			
+			HoatDong hoatDong = new HoatDong(tenHd, nbd, nkt, moTaHd,slmin,slmax,thdk,status);
+			
+			hoatDongService.createHoatDong(hoatDong);
+			
+		}else {
+			System.out.println(2);
+		}
+
+		request.getRequestDispatcher("/WEB-INF/views/HoatDong.jsp").forward(request, response);
 	}
 }
