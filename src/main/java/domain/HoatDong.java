@@ -21,7 +21,9 @@ public class HoatDong {
 	private List<ThamGia> danhSachThamGia;   //  Liên kết N-N qua bảng trung gian
 
 	
-	
+	public HoatDong() {
+		
+	}
 	public HoatDong(String tenHd, LocalDateTime ngayGioBd, LocalDateTime ngayGioKt, String moTa, 
 			int soLuongToiThieuYc, int soLuongToiDaYc, LocalDateTime thoiHanDk, String trangThai) {
 		super();

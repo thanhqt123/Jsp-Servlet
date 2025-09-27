@@ -8,10 +8,17 @@ public class ThanhVien {
 	private String hoTen;
 	private LocalDateTime ngaySinh;
 	private String email;
-	
-	private List<ThamGia> danhSachThamGia;  //  Liên kết N-N qua bảng trung gian
-	
-	
+	private boolean gioiTinh;
+
+	public boolean isGioiTinh() {
+		return gioiTinh;
+	}
+
+	public void setGioiTinh(boolean gioiTinh) {
+		this.gioiTinh = gioiTinh;
+	}
+
+	private List<ThamGia> danhSachThamGia; // Liên kết N-N qua bảng trung gian
 
 	public List<ThamGia> getDanhSachThamGia() {
 		return danhSachThamGia;
