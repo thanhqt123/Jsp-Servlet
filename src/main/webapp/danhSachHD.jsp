@@ -1,6 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%@page
-import="java.time.format.DateTimeFormatter"%> <%@page import="domain.HoatDong"%> <%@page import="java.util.List"%> <%@page
-import="service.HoatDongService"%> <%@page import="domain.ThamGia"%> <%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -111,7 +109,7 @@ pageEncoding="UTF-8" %>
                         <td>${hd.trangThai}</td>
                         <td style="display: flex; gap: 20px">
                             <a href="suaHoatDong?id=${hd.maHd}" class="btn btn-primary">Sửa</a>
-                            <a href="XoaHoatDong?id=${hd.maHd}" class="btn btn-danger">Xóa</a>
+                            <a href="xoaHoatDong?id=${hd.maHd}" class="btn btn-danger">Xóa</a>
                         </td>
                     </tr>
                 </c:forEach>

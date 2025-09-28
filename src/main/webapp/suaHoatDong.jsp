@@ -75,7 +75,7 @@ pageEncoding="UTF-8" %>
         </nav>
         <div class="container">
             <h2>Sửa hoạt động</h2>
-            <form action="${pageContext.request.contextPath}/suaHoatDong" method="post">
+            <form action="<c:url value='/suaHoatDong'/>" method="post">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">

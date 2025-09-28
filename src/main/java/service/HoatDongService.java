@@ -81,7 +81,18 @@ public class HoatDongService {
 		}
 		return -1;
 	}
-
+	
+	public void deleteHoatDongById(int id) {
+		try (Connection conn = JDBCConnection.getConnection()) {
+	        String sql = "DELETE FROM HOAT_DONG WHERE mahd = ?";
+	       PreparedStatement stmt = conn.prepareStatement(sql);
+	       stmt.setInt(1, id);
+	       
+	       stmt.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public void createHoatDong(HoatDong hoatDong) {
 
 		try (Connection conn = JDBCConnection.getConnection()) {

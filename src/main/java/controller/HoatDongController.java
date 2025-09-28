@@ -19,57 +19,23 @@ import domain.ThanhVien;
 import service.HoatDongService;
 import service.ThanhVienService;
 
-@WebServlet({ "/taoHoatDong", "/danhSachHD", "/suaHoatDong" })
+@WebServlet({ "/taoHoatDong", "/danhSachHD", "/suaHoatDong", "/xoaHoatDong" })
 public class HoatDongController extends HttpServlet {
-	private static final Logger logger = Logger.getLogger(HoatDongController.class.getName());
-	static {
-		try {
-			// Tạo thư mục logs nếu chưa tồn tại
-			File logDir = new File("logs");
-			if (!logDir.exists()) {
-				logDir.mkdirs();
-			}
 
-			// Ghi log vào file
-			FileHandler fh = new FileHandler("logs/messages.log", true); // true = append
-			fh.setFormatter(new SimpleFormatter());
-			logger.addHandler(fh);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	static {
-		try {
-			// Tạo thư mục logs nếu chưa tồn tại
-			File logDir = new File("logs");
-			if (!logDir.exists()) {
-				logDir.mkdirs();
-			}
-
-			// Ghi log vào file
-			FileHandler fh = new FileHandler("logs/messages.log", true); // true = append
-			fh.setFormatter(new SimpleFormatter());
-			logger.addHandler(fh);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	HoatDongService hoatDongService = new HoatDongService();
 	ThanhVienService thanhVienService = new ThanhVienService();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println(System.getProperty("user.dir"));
 
 		String uri = request.getRequestURI();
 		if (uri.endsWith("/taoHoatDong")) {
 			request.getRequestDispatcher("taoHoatDong.jsp").forward(request, response);
 		} else if (uri.endsWith("/danhSachHD")) {
-
 			List<HoatDong> ds = hoatDongService.getAllHoatDOng();
 			request.setAttribute("ds", ds);
-			request.getRequestDispatcher("danhSachHD.jsp").forward(request, response);
+			request.getRequestDispatcher("/danhSachHD.jsp").forward(request, response);
 
 		} else if (uri.endsWith("/suaHoatDong")) {
 			String id = request.getParameter("id");
@@ -83,6 +49,13 @@ public class HoatDongController extends HttpServlet {
 
 			}
 
+		} else if (uri.endsWith("/xoaHoatDong")) {
+			String idDel = request.getParameter("id");
+			System.out.println(idDel);
+			if (idDel != null) {
+				request.setAttribute("id", idDel);
+				request.getRequestDispatcher("/xoaHoatDong.jsp").forward(request, response);
+			}
 		}
 	}
 
@@ -167,11 +140,13 @@ public class HoatDongController extends HttpServlet {
 
 				boolean isUpdated = hoatDongService.updateHoatDong(hoatDong);
 
-				if (isUpdated) {
-					logger.info("Update thanh cong");
-				} else {
-					logger.info("update that bai");
-				}
+				response.sendRedirect(request.getContextPath() + "/danhSachHD");
+
+			}
+		} else if (uri.endsWith("/xoaHoatDong")) {
+			String idDel = request.getParameter("id");
+			if (idDel != null) {
+				hoatDongService.deleteHoatDongById(Integer.parseInt(idDel));
 				response.sendRedirect(request.getContextPath() + "/danhSachHD");
 
 			}
