@@ -1,7 +1,6 @@
 package service;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +14,40 @@ public class HoatDongService {
 
 	public HoatDongService() {
 
+	}
+
+	public boolean updateHoatDong(HoatDong hoatDong) {
+		try (Connection conn = JDBCConnection.getConnection()) {
+			String sql = "UPDATE HOAT_DONG SET "
+					+ "TenHD = ?, "
+					+ "MoTaHD = ?, "
+					+ "NgayGioBD = ?, "
+					+ "NgayGioKetThuc = ?, "
+					+ "SoLuongToiThieuYC = ?, "
+					+ "SoLuongToiDaYC = ?, "
+					+ "ThoiHanDangKy = ?, "
+					+ "MaTV = ?, "
+					+ "TrangThai = ? "
+					+ "WHERE MaHD = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, hoatDong.getTenHd());
+			stmt.setString(2, hoatDong.getMoTa());
+			stmt.setTimestamp(3, java.sql.Timestamp.valueOf(hoatDong.getNgayGioBd()));
+			stmt.setTimestamp(4, java.sql.Timestamp.valueOf(hoatDong.getNgayGioKt()));
+			stmt.setInt(5, hoatDong.getSoLuongToiThieuYc());
+			stmt.setInt(6, hoatDong.getSoLuongToiDaYc());
+			stmt.setTimestamp(7, java.sql.Timestamp.valueOf(hoatDong.getThoiHanDk()));
+			stmt.setInt(8, hoatDong.getThanhVien().getMaTv());
+			stmt.setString(9, hoatDong.getTrangThai());
+			stmt.setInt(10, hoatDong.getMaHd());
+			int rows = stmt.executeUpdate();
+			if (rows > 0)
+				return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public int checkIdMember(int id) {
@@ -73,9 +106,39 @@ public class HoatDongService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}
 
+	}
+
+	public HoatDong findHoatDongById(int id) {
+		HoatDong hd = new HoatDong();
+
+		try (Connection conn = JDBCConnection.getConnection()) {
+			String sql = "SELECT * FROM HOAT_DONG WHERE MaHd=?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				hd.setMaHd(rs.getInt("MaHD"));
+				hd.setTenHd(rs.getString("TenHD"));
+				hd.setMoTa(rs.getString("MoTaHD"));
+				hd.setNgayGioBd(rs.getTimestamp("NgayGioBD").toLocalDateTime());
+				hd.setNgayGioKt(rs.getTimestamp("NgayGioKetThuc").toLocalDateTime());
+				hd.setSoLuongToiThieuYc(rs.getInt("SoLuongToiThieuYC"));
+				hd.setSoLuongToiDaYc(rs.getInt("SoLuongToiDaYC"));
+				hd.setThoiHanDk(rs.getTimestamp("ThoiHanDangKy").toLocalDateTime());
+				hd.setTrangThai(rs.getString("TrangThai"));
+				ThanhVienService thanhVienService = new ThanhVienService();
+				ThanhVien tv = thanhVienService.findThanhVienById(rs.getInt("MaTV"));
+				if (tv != null) {
+					hd.setThanhVien(tv);
+				}
+			}
+			return hd;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public List<HoatDong> getAllHoatDOng() {
@@ -86,7 +149,6 @@ public class HoatDongService {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 
 			ResultSet rs = stmt.executeQuery();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d HH:mm");
 			while (rs.next()) {
 				HoatDong hd = new HoatDong();
 				hd.setMaHd(rs.getInt("MaHD"));
